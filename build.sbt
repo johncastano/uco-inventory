@@ -8,5 +8,15 @@ lazy val root = (project in file(".")).
       version      := "0.1.0-SNAPSHOT"
     )),
     name := "inventory",
-    libraryDependencies += scalaTest % Test
+    resolvers ++= Seq(
+      Resolver.sonatypeRepo("releases"),
+      Resolver.typesafeRepo("releases"),
+      Resolver.bintrayRepo("websudos", "oss-releases")
+    ),
+    libraryDependencies ++= Seq(
+      "com.outworkers" %% "phantom-dsl" % "2.14.5",
+      "com.outworkers" %% "phantom-streams" % "2.14.5",
+      scalaTest % Test
+
+    )
   )
