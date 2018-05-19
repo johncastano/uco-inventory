@@ -15,6 +15,7 @@ lazy val root = (project in file(".")).
     ),
     libraryDependencies ++= Seq(
       "com.outworkers" %% "phantom-dsl" % "2.14.5",
+      "com.outworkers" %% "phantom-jdk8" % "2.14.5",
       "com.outworkers" %% "phantom-streams" % "2.14.5",
       scalaTest % Test
 
