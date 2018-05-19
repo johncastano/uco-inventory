@@ -7,7 +7,9 @@ case class Product(
                  name: String,
                  description: String,
                  quantity: Int,
-                 category: String, //TODO: Create type for this
+                 gender: Gender,
+                 category: Category,
                  modifiedDate: ZonedDateTime,
+                 brand: String, //TODO: Define entity for brand???
                  price: Double
                  )
