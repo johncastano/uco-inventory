@@ -21,6 +21,7 @@ lazy val root = (project in file(".")).settings(
     "io.circe" %% "circe-core" % "0.9.3",
     "io.circe" %% "circe-generic" % "0.9.3",
     "io.circe" %% "circe-parser" % "0.9.3",
+    "io.circe" %% "circe-java8" % "0.9.3",
     "de.heikoseeberger" %% "akka-http-circe" % "1.21.0",
     "com.typesafe.akka" %% "akka-http-testkit" % "10.1.1" % Test,
     "com.typesafe.akka" %% "akka-stream-testkit" % "2.5.12" % Test,

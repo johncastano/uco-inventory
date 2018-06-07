@@ -9,7 +9,7 @@ class MapperProductDTOInstances extends MapperSugar {
     new Mapper[Product, ProductDTO] {
       override def to(product: Product): ProductDTO =
         ProductDTO(
-          ref = product.ref,
+          ref = Some(product.ref),
           name = product.name,
           description = product.description,
           quantity = product.quantity,

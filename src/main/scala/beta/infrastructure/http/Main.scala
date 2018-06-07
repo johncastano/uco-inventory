@@ -27,7 +27,7 @@ object Main extends App with HttpService {
   }
   override lazy val repository: Repository = new Repository()
 
-  // http://localhost:8080/beta/product 
+  // http://localhost:8080/beta/product
 
   println(s"Starting http service ....")
   Http().bindAndHandle(routes, host, port) onComplete {

@@ -1,7 +1,6 @@
 package beta.infrastructure.http.dtos
 
-case class ProductDTO(
-    ref: Option[String],
+case class UpdateProductDTO(
     name: String,
     description: String,
     quantity: Int,

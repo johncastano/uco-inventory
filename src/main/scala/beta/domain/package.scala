@@ -1,5 +1,7 @@
 package beta
 
+import java.util.UUID
+
 package object domain {
 
   def validateString(value: String,
@@ -8,6 +10,13 @@ package object domain {
       Left(FieldIsEmpty(field))
     else
       Right(value)
+  }
+
+  def validateRef(ref: Option[String]): Either[DomainError, String] = {
+    ref.fold[Either[DomainError, String]](Right(UUID.randomUUID.toString)) {
+      r =>
+        validateString(r, "Ref")
+    }
   }
 
   def validatePrice(value: Double): Either[DomainError, Double] = {

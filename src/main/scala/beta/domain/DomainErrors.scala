@@ -1,7 +1,7 @@
 package beta.domain
 
 final case class ItemNotFound(code: Int = 100001,
-                              message: String = "Item not found")
+                              message: String = "Product not found")
     extends DomainError
 final case class InvalidCategory(
     code: Int = 100002,
