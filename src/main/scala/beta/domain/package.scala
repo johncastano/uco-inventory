@@ -1,8 +1,20 @@
 package beta
 
+import java.time.{ZoneOffset, ZonedDateTime}
 import java.util.UUID
 
 package object domain {
+
+  type Demand = Int
+  type OrderingCost = Double
+  type MaintenanceCost = Double
+  type AnnualWorkDays = Int
+  type EOQ = Int
+  type NumberOfOrders = Int
+  type DayPerOrder = Int
+  type ReorderPoint = Int
+
+  def timeNow: ZonedDateTime = ZonedDateTime.now(ZoneOffset.UTC)
 
   def validateString(value: String,
                      field: String): Either[DomainError, String] = {
@@ -19,9 +31,17 @@ package object domain {
     }
   }
 
-  def validatePrice(value: Double): Either[DomainError, Double] = {
+  def validateInt(value: Int, field: String): Either[DomainError, Int] = {
     if (value <= 0)
-      Left(InvalidPrice())
+      Left(InvalidIntValue(field))
+    else
+      Right(value)
+  }
+
+  def validateDouble(value: Double,
+                     field: String): Either[DomainError, Double] = {
+    if (value <= 0)
+      Left(InvalidDoubleValue(field))
     else
       Right(value)
   }

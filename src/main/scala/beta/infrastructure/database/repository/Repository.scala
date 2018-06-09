@@ -1,8 +1,8 @@
 package beta.infrastructure.database.repository
 
 import beta.infrastructure.database.DatabaseProvider
-import beta.domain.Product
-import beta.infrastructure.database.entities.ProductEntity
+import beta.domain.{EOQModel, Product}
+import beta.infrastructure.database.entities.{EOQEntity, ProductEntity}
 import com.outworkers.phantom.dsl._
 
 import scala.concurrent.Future
@@ -29,4 +29,11 @@ class Repository(implicit dbProvider: DatabaseProvider) {
       _ <- database.productTable.deleteProduct(ref)
     } yield product
 
+  def saveOrUpdateEOQ(eoq: EOQModel): Future[EOQEntity] = {
+    val entity = eoq.to[EOQEntity]
+    database.eoqTable.saveOrUpdate(entity).map(_ => entity)
+  }
+
+  def getEOQByRef(ref: String): Future[Option[EOQEntity]] =
+    database.eoqTable.getEOQByRef(ref)
 }

@@ -2,7 +2,7 @@ package beta.infrastructure.http
 
 import akka.http.scaladsl.server._
 
-trait HttpService extends InventoryRoutes {
+trait HttpService extends ProductRoutes {
 
-  val routes: Route = inventoryRoutes
+  val routes: Route = pathPrefix("beta")(inventoryRoutes)
 }

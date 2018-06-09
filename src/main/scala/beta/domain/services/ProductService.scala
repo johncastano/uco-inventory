@@ -1,4 +1,4 @@
-package beta.infrastructure.http
+package beta.domain.services
 
 import beta.domain.{
   DomainError,
@@ -15,7 +15,10 @@ import cats.implicits._
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait InventoryService {
+trait ProductService extends EOQService {
+
+  import ProductService._
+  import beta.infrastructure.mapper.MapperProductEntity._
 
   implicit val executionContext: ExecutionContext
   val repository: Repository
@@ -50,6 +53,25 @@ trait InventoryService {
     } yield udp).value
   }
 
+  def discountQuantity(ref: String,
+                       quantity: Int): Future[Either[DomainError, Product]] =
+    (for {
+      rf <- EitherT.fromEither[Future](validateString(ref, "Ref"))
+      q <- EitherT.fromEither[Future](validateInt(quantity, "Quantity"))
+      product <- EitherT(
+        repository.getProductByRef(rf).map(_.toRight(ItemNotFound())))
+      dq <- EitherT.fromEither[Future](makeDiscount(product.to[Product], q))
+      eoqm <- EitherT(
+        repository.getEOQByRef(rf).map(_.toRight(EOQIsNecessary())))
+      fp <- OptionT
+        .pure[Future](checkReorderPoint(dq, eoqm.to[EOQModel]))
+        .toRight(ErrorCalculatingReorder())
+      sv <- EitherT(
+        repository
+          .saveOrUpdateProduct(fp)
+          .map(Some(_).toRight[DomainError](UnexpectedError())))
+    } yield sv).value
+
   def getProductByRef(ref: String): Future[Option[ProductEntity]] =
     repository.getProductByRef(ref)
 
@@ -58,4 +80,27 @@ trait InventoryService {
 
   def deleteProduct(ref: String): Future[Option[ProductEntity]] =
     repository.deleteProduct(ref)
+}
+
+object ProductService {
+
+  def makeDiscount(product: Product,
+                   quantity: Int): Either[DomainError, Product] = {
+    val newQuantity = product.quantity - quantity
+    if (newQuantity < 0)
+      Left(InsufficientProduct())
+    else Right(product.copy(quantity = newQuantity))
+  }
+
+  def checkReorderPoint(product: Product, eoq: EOQModel): Product =
+    if (product.quantity <= eoq.r)
+      orderProducts(product, eoq.q)
+    else
+      product
+
+  def orderProducts(product: Product, quantity: Int): Product = {
+    val newQuantity = product.quantity + quantity
+    product.copy(quantity = newQuantity)
+  }
+
 }

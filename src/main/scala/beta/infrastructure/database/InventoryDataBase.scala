@@ -1,7 +1,7 @@
 package beta.infrastructure.database
 
 import beta.infrastructure.database.Connector._
-import beta.infrastructure.database.tables.ProductDAO
+import beta.infrastructure.database.tables.{EOQDAO, ProductDAO}
 import com.outworkers.phantom.connectors.CassandraConnection
 import com.outworkers.phantom.database.Database
 
@@ -9,6 +9,7 @@ class InventoryDataBase(override val connector: CassandraConnection)
     extends Database[InventoryDataBase](connector) {
 
   object productTable extends ProductDAO with connector.Connector
+  object eoqTable extends EOQDAO with connector.Connector
 }
 
 object InvDatabase extends InventoryDataBase(connector)

@@ -12,13 +12,11 @@ case class Product(
     gender: Gender,
     category: Category,
     modifiedDate: ZonedDateTime,
-    brand: String, //TODO: Define entity for brand???
+    brand: String,
     price: Double
 )
 
 object Product {
-
-  private[this] def timeNow: ZonedDateTime = ZonedDateTime.now(ZoneOffset.UTC)
 
   def validate(dto: ProductDTO): Either[DomainError, Product] = {
     for {
@@ -28,7 +26,7 @@ object Product {
       gender <- validateGender(dto.gender)
       category <- validateCategory(dto.category)
       brand <- validateString(dto.brand, "Brand")
-      price <- validatePrice(dto.price)
+      price <- validateDouble(dto.price, "Price")
     } yield
       new Product(
         ref = ref,
@@ -51,7 +49,7 @@ object Product {
       gender <- validateGender(dto.gender)
       category <- validateCategory(dto.category)
       brand <- validateString(dto.brand, "Brand")
-      price <- validatePrice(dto.price)
+      price <- validateDouble(dto.price, "Price")
     } yield
       new Product(
         ref = ref,
